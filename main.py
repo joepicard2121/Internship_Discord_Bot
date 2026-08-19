@@ -3,7 +3,8 @@ from discord.ext import commands
 import logging
 from dotenv import load_dotenv
 import os
-import aiohttp
+import requests
+from bs4 import BeautifulSoup
 
 load_dotenv()
 token = os.getenv('DISCORD_TOKEN')
@@ -17,6 +18,17 @@ intents.members = True
 
 bot = commands.Bot(command_prefix='!', intents=intents)
 
+#WebScraper
+def scrape_jobs():
+    url = "https://realpython.github.io/fake-jobs/"
+    
+    response = requests.get(url)
+    
+    soup = BeautifulSoup(response.text, "html.parser")
+    
+    print(soup.title)
+
+#Events
 @bot.event
 async def on_ready():
     print(f"We are ready to go in, {bot.user.name}")
@@ -26,7 +38,7 @@ async def on_ready():
 async def on_member_join(member):
     await member.send(f"Welcome to the server {member.name}")
     
-#Test command
+#Commands
 @bot.command()
 async def ping(ctx):
     await ctx.send("Pong!")
@@ -35,5 +47,6 @@ async def ping(ctx):
 @bot.command()
 async def jobs(ctx):
     await ctx.send("🔎 Searching for IT internships...")
+    scrape_jobs()
     
 bot.run(token, log_handler=handler, log_level=logging.DEBUG)
