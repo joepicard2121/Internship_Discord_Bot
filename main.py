@@ -68,6 +68,17 @@ async def ping(ctx):
     await ctx.send("Pong!")
     
 #Job search command
+# @bot.command()
+# async def jobs(ctx):
+#     await ctx.send("🔎 Searching for IT internships...")
+
+#     jobs_found = scrape_adzuna_jobs()
+
+#     for job in jobs_found:
+#         title = job.get("title", "Unknown Job")
+
+#         await ctx.send(f"💼 **{title}**")
+
 @bot.command()
 async def jobs(ctx):
     await ctx.send("🔎 Searching for IT internships...")
@@ -77,6 +88,23 @@ async def jobs(ctx):
     for job in jobs_found:
         title = job.get("title", "Unknown Job")
 
-        await ctx.send(f"💼 **{title}**")
+        company = job.get("company", {}).get(
+            "display_name",
+            "Unknown Company"
+        )
+
+        location = job.get("location", {}).get(
+            "display_name",
+            "Unknown Location"
+        )
+
+        link = job.get("redirect_url", "No link available")
+
+        await ctx.send(
+            f"**{title}**\n"
+            f"**Company:** {company}\n"
+            f"**Location:** {location}\n"
+            f"**Apply:** {link}"
+        )
     
 bot.run(token, log_handler=handler, log_level=logging.DEBUG)
