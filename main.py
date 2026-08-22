@@ -18,15 +18,39 @@ intents.members = True
 
 bot = commands.Bot(command_prefix='!', intents=intents)
 
-#WebScraper
-def scrape_jobs():
+#WebScraper TEST
+def scrape_test_jobs():
     url = "https://realpython.github.io/fake-jobs/"
     
     response = requests.get(url)
     
     soup = BeautifulSoup(response.text, "html.parser")
     
-    print(soup.title)
+    jobs = soup.find_all("h2" , class_="title")
+    
+    for job in jobs:
+        print(job.text.strip())
+
+#scraping for jobs on adzuna
+def scrape_adzuna_jobs():
+    url = "https://api.adzuna.com/v1/api/jobs/us/search/1"
+
+    params = {
+        "app_id": adzuna_app_id,
+        "app_key": adzuna_app_key,
+        "results_per_page": 5,
+        "what": "IT Intern",
+        "where": "United States",
+        "content-type": "application/json"
+    }
+
+    response = requests.get(url, params=params)
+
+    data = response.json()
+
+    jobs = data.get("results", [])
+
+    return jobs
 
 #Events
 @bot.event
@@ -47,6 +71,12 @@ async def ping(ctx):
 @bot.command()
 async def jobs(ctx):
     await ctx.send("🔎 Searching for IT internships...")
-    scrape_jobs()
+
+    jobs_found = scrape_adzuna_jobs()
+
+    for job in jobs_found:
+        title = job.get("title", "Unknown Job")
+
+        await ctx.send(f"💼 **{title}**")
     
 bot.run(token, log_handler=handler, log_level=logging.DEBUG)
