@@ -86,35 +86,6 @@ async def on_member_join(member):
     await member.send(f"Welcome to the server {member.name}")
     
 #Commands
-    
-#Job search command
-# @bot.command()
-# async def jobs(ctx):
-#     await ctx.send("🔎 Searching for IT internships...")
-
-#     jobs_found = scrape_adzuna_jobs()
-
-#     for job in jobs_found:
-#         title = job.get("title", "Unknown Job")
-
-#         company = job.get("company", {}).get(
-#             "display_name",
-#             "Unknown Company"
-#         )
-
-#         location = job.get("location", {}).get(
-#             "display_name",
-#             "Unknown Location"
-#         )
-
-#         link = job.get("redirect_url", "No link available")
-
-#         await ctx.send(
-#             f"**{title}**\n"
-#             f"**Company:** {company}\n"
-#             f"**Location:** {location}\n"
-#             f"**Apply:** {link}"
-#         )
 
 #timer for automatic job searches
 @tasks.loop(minutes=30)
